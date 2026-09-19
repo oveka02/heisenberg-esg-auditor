@@ -3,387 +3,433 @@ import "./App.css";
 
 function App() {
   const [file, setFile] = useState(null);
-  const [result, setResult] = useState(null);
+  const [auditing, setAuditing] = useState(false);
+  const [audited, setAudited] = useState(false);
 
-  const handleFile = (e) => {
-    const selected = e.target.files[0];
+  const [auditData, setAuditData] = useState({
+    environment: 86,
+    social: 78,
+    governance: 91,
+    confidence: 94,
+    risk: "LOW",
+  });
 
-    if (selected) {
-      setFile(selected);
-      setResult(null);
+  const handleFile = (event) => {
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile) {
+      setFile(selectedFile);
+      setAudited(false);
     }
   };
 
-  const verifyCertificate = () => {
+  const startAudit = () => {
     if (!file) {
-      alert("Please upload a certificate first.");
+      alert("Please upload a vendor document first.");
       return;
     }
 
-    const name = file.name.toLowerCase();
+    setAuditing(true);
 
-    if (
-      name.includes("fake") ||
-      name.includes("edited") ||
-      name.includes("tampered")
-    ) {
-      setResult({
-        score: 38,
-        status: "SUSPICIOUS",
-        message: "Possible document manipulation detected.",
+    setTimeout(() => {
+      setAuditing(false);
+      setAudited(true);
+
+      setAuditData({
+        environment: 86,
+        social: 78,
+        governance: 91,
+        confidence: 94,
+        risk: "LOW",
       });
-    } else {
-      setResult({
-        score: 92,
-        status: "GENUINE",
-        message: "Certificate passed the initial verification checks.",
-      });
-    }
+    }, 2000);
   };
+
+  const compositeScore = Math.round(
+    (auditData.environment +
+      auditData.social +
+      auditData.governance) /
+      3
+  );
 
   return (
     <div className="app">
 
       {/* NAVBAR */}
       <nav className="navbar">
-        <div className="logo">
-          <span>H</span> HEISENBERG
+        <div className="brand">
+          <div className="brand-icon">H</div>
+          <div>
+            <h2>HEISENBERG</h2>
+            <span>ESG AUDITOR</span>
+          </div>
         </div>
 
         <div className="nav-links">
-          <a href="#home">Home</a>
           <a href="#dashboard">Dashboard</a>
-          <a href="#audit">Certificate Audit</a>
-          <a href="#about">About</a>
+          <a href="#audit">Audit</a>
+          <a href="#evidence">Evidence</a>
+          <a href="#history">History</a>
+        </div>
+
+        <div className="status">
+          <span className="status-dot"></span>
+          System Online
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="hero" id="home">
-        <div className="hero-content">
-          <div className="badge">
-            AI-POWERED ESG VERIFICATION
-          </div>
+      <section className="hero" id="dashboard">
+        <div className="hero-text">
+          <p className="eyebrow">CORPORATE SUSTAINABLE PROCUREMENT</p>
 
           <h1>
-            Corporate Sustainable
+            Vendor ESG
             <br />
-            <span>Procurement Auditor</span>
+            <span>Compliance Auditor</span>
           </h1>
 
-          <p>
-            Verify vendor ESG certificates, detect suspicious documents,
-            calculate compliance scores and make smarter procurement
-            decisions.
+          <p className="hero-description">
+            AI-powered vendor document verification, ESG claim analysis,
+            compliance scoring and evidence-based procurement intelligence.
           </p>
 
-          <a href="#audit" className="primary-button">
-            Start ESG Audit →
-          </a>
+          <div className="hero-buttons">
+            <a href="#audit" className="primary-btn">
+              Start New Audit →
+            </a>
+
+            <a href="#dashboard" className="secondary-btn">
+              View Dashboard
+            </a>
+          </div>
         </div>
 
         <div className="hero-card">
-          <div className="circle-score">
-            <strong>86.4</strong>
-            <small>ESG SCORE</small>
+          <div className="card-top">
+            <span>LIVE AUDIT STATUS</span>
+            <span className="live">● LIVE</span>
           </div>
 
-          <h3>Vendor Compliance</h3>
-
-          <div className="progress">
-            <div></div>
+          <div className="score-circle">
+            <strong>{compositeScore}</strong>
+            <span>/ 100</span>
           </div>
 
-          <p>94% Compliance Rate</p>
-        </div>
-      </section>
+          <p>Composite ESG Score</p>
 
-      {/* DASHBOARD */}
-      <section className="dashboard" id="dashboard">
-        <div className="section-title">
-          <span>ANALYTICS</span>
-          <h2>ESG Performance Dashboard</h2>
-          <p>Real-time overview of vendor sustainability performance.</p>
-        </div>
-
-        <div className="stats-grid">
-
-          <div className="stat-card purple">
-            <div className="stat-icon">🏢</div>
-            <h3>128</h3>
-            <p>Vendors Audited</p>
-            <small>↑ 12% this month</small>
-          </div>
-
-          <div className="stat-card green">
-            <div className="stat-icon">✓</div>
-            <h3>94%</h3>
-            <p>Compliance Rate</p>
-            <small>↑ 4.2% this month</small>
-          </div>
-
-          <div className="stat-card red">
-            <div className="stat-icon">⚠</div>
-            <h3>17</h3>
-            <p>Documents Flagged</p>
-            <small>Needs review</small>
-          </div>
-
-          <div className="stat-card blue">
-            <div className="stat-icon">★</div>
-            <h3>86.4</h3>
-            <p>Average ESG Score</p>
-            <small>Excellent performance</small>
-          </div>
-
-        </div>
-
-        {/* ESG SCORES */}
-        <div className="score-section">
-
-          <div className="score-panel">
-            <h3>ESG Score Breakdown</h3>
-
-            <div className="score-row">
-              <span>Environmental</span>
-              <strong>91%</strong>
+          <div className="mini-stats">
+            <div>
+              <b>{auditData.environment}</b>
+              <span>Environment</span>
             </div>
 
-            <div className="bar">
-              <div className="bar-environment"></div>
-            </div>
-
-            <div className="score-row">
+            <div>
+              <b>{auditData.social}</b>
               <span>Social</span>
-              <strong>84%</strong>
             </div>
 
-            <div className="bar">
-              <div className="bar-social"></div>
-            </div>
-
-            <div className="score-row">
+            <div>
+              <b>{auditData.governance}</b>
               <span>Governance</span>
-              <strong>86%</strong>
-            </div>
-
-            <div className="bar">
-              <div className="bar-governance"></div>
             </div>
           </div>
-
-          <div className="risk-panel">
-            <h3>Risk Overview</h3>
-
-            <div className="risk-item">
-              <span>Low Risk</span>
-              <strong>87</strong>
-            </div>
-
-            <div className="risk-item">
-              <span>Medium Risk</span>
-              <strong>24</strong>
-            </div>
-
-            <div className="risk-item">
-              <span>High Risk</span>
-              <strong>17</strong>
-            </div>
-          </div>
-
         </div>
       </section>
 
-      {/* CERTIFICATE AUDIT */}
-      <section className="audit" id="audit">
+      {/* PROCESS */}
+      <section className="process-section">
+        <div className="section-heading">
+          <p className="eyebrow">AUTOMATED VERIFICATION PIPELINE</p>
+          <h2>From document to decision</h2>
+        </div>
 
-        <div className="section-title">
-          <span>DOCUMENT VERIFICATION</span>
-          <h2>Fake Certificate Detection</h2>
+        <div className="process-grid">
+          <ProcessCard number="01" title="Document Upload" text="Upload vendor certificates and reports." />
+          <ProcessCard number="02" title="OCR Extraction" text="Extract text and document information." />
+          <ProcessCard number="03" title="ESG Claims" text="Identify ESG claims using NLP." />
+          <ProcessCard number="04" title="Rule Evaluation" text="Verify claims against compliance rules." />
+          <ProcessCard number="05" title="ESG Scoring" text="Calculate Environment, Social and Governance scores." />
+          <ProcessCard number="06" title="Risk Dashboard" text="Generate risk tier, alerts and audit evidence." />
+        </div>
+      </section>
+
+      {/* AUDIT */}
+      <section className="audit-section" id="audit">
+        <div className="section-heading">
+          <p className="eyebrow">NEW VENDOR AUDIT</p>
+          <h2>Upload vendor evidence</h2>
           <p>
-            Upload a vendor ESG certificate for automated preliminary
-            verification.
+            Submit a certificate, ESG report or compliance document for
+            automated verification.
           </p>
         </div>
 
         <div className="audit-container">
 
           <div className="upload-card">
+            <div className="upload-icon">↑</div>
 
-            <div className="upload-icon">
-              📄
-            </div>
-
-            <h3>Upload ESG Certificate</h3>
+            <h3>
+              {file ? file.name : "Upload Vendor Document"}
+            </h3>
 
             <p>
-              Supported formats: PDF, PNG, JPG
+              PDF, DOCX, JPG or PNG
             </p>
 
-            <input
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg"
-              onChange={handleFile}
-            />
+            <label className="upload-btn">
+              Choose Document
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                onChange={handleFile}
+              />
+            </label>
 
             {file && (
-              <div className="selected-file">
-                📎 {file.name}
+              <div className="file-info">
+                <span>✓</span>
+                {file.name}
               </div>
             )}
 
             <button
-              className="verify-button"
-              onClick={verifyCertificate}
+              className="audit-btn"
+              onClick={startAudit}
+              disabled={auditing}
             >
-              🔍 Verify Certificate
+              {auditing ? "Analyzing Document..." : "Run ESG Audit →"}
             </button>
-
           </div>
 
-          {/* RESULT */}
-          <div className="result-card">
+          <div className="pipeline-card">
+            <h3>Audit Pipeline</h3>
 
-            {!result ? (
-              <>
-                <div className="result-icon">🔎</div>
+            <PipelineStep
+              number="01"
+              title="OCR Text Extraction"
+              active={auditing || audited}
+            />
 
-                <h3>Verification Result</h3>
+            <PipelineStep
+              number="02"
+              title="NLP ESG Claim Extraction"
+              active={audited}
+            />
 
-                <p>
-                  Upload a certificate to view the verification result.
-                </p>
+            <PipelineStep
+              number="03"
+              title="Confidence Scoring"
+              active={audited}
+            />
 
-                <div className="checks">
-                  <p>✓ Document format validation</p>
-                  <p>✓ File consistency check</p>
-                  <p>✓ Suspicious filename detection</p>
-                  <p>✓ Preliminary fraud screening</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="result-icon">
-                  {result.status === "GENUINE" ? "✅" : "⚠️"}
-                </div>
+            <PipelineStep
+              number="04"
+              title="Compliance Rule Evaluation"
+              active={audited}
+            />
 
-                <h3>Verification Result</h3>
-
-                <div className="result-score">
-                  {result.score}%
-                </div>
-
-                <h2
-                  className={
-                    result.status === "GENUINE"
-                      ? "genuine"
-                      : "suspicious"
-                  }
-                >
-                  {result.status}
-                </h2>
-
-                <p>{result.message}</p>
-
-                <div className="checks">
-                  <p>✓ File format validation</p>
-                  <p>✓ Document consistency check</p>
-                  <p>✓ Fraud screening</p>
-                  <p>✓ Risk assessment</p>
-                </div>
-              </>
-            )}
-
+            <PipelineStep
+              number="05"
+              title="E / S / G Weighted Scoring"
+              active={audited}
+            />
           </div>
 
         </div>
       </section>
 
-      {/* RECENT AUDITS */}
-      <section className="audits">
+      {/* RESULTS */}
+      {audited && (
+        <section className="results-section">
+          <div className="section-heading">
+            <p className="eyebrow">AUDIT RESULT</p>
+            <h2>Vendor Compliance Analysis</h2>
+          </div>
 
-        <div className="section-title">
-          <span>AUDIT HISTORY</span>
-          <h2>Recent Vendor Audits</h2>
+          <div className="results-grid">
+
+            <ScoreCard
+              title="Environment"
+              score={auditData.environment}
+              icon="E"
+            />
+
+            <ScoreCard
+              title="Social"
+              score={auditData.social}
+              icon="S"
+            />
+
+            <ScoreCard
+              title="Governance"
+              score={auditData.governance}
+              icon="G"
+            />
+
+            <div className="result-card">
+              <span className="result-label">RISK TIER</span>
+              <div className="risk-value">{auditData.risk}</div>
+              <p>Based on current ESG evidence.</p>
+            </div>
+
+          </div>
+
+          <div className="compliance-panel">
+            <div>
+              <span>COMPOSITE ESG SCORE</span>
+              <strong>{compositeScore}/100</strong>
+            </div>
+
+            <div>
+              <span>DOCUMENT CONFIDENCE</span>
+              <strong>{auditData.confidence}%</strong>
+            </div>
+
+            <div>
+              <span>CLAIMS VERIFIED</span>
+              <strong>18 / 20</strong>
+            </div>
+
+            <div>
+              <span>EXPIRY STATUS</span>
+              <strong className="valid">VALID</strong>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* EVIDENCE */}
+      <section className="evidence-section" id="evidence">
+        <div className="section-heading">
+          <p className="eyebrow">EVIDENCE-BASED VERIFICATION</p>
+          <h2>Audit evidence trail</h2>
         </div>
 
-        <div className="table-container">
+        <div className="evidence-table">
 
-          <table>
-            <thead>
-              <tr>
-                <th>Vendor</th>
-                <th>ESG Score</th>
-                <th>Risk</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+          <div className="table-header">
+            <span>ESG CLAIM</span>
+            <span>EVIDENCE</span>
+            <span>CONFIDENCE</span>
+            <span>STATUS</span>
+          </div>
 
-            <tbody>
-              <tr>
-                <td>GreenTech Industries</td>
-                <td>94</td>
-                <td><span className="low">Low</span></td>
-                <td>✓ Verified</td>
-              </tr>
+          <EvidenceRow
+            claim="Renewable Energy Usage"
+            evidence="Energy Certificate #ESG-2041"
+            confidence="96%"
+            status="Verified"
+          />
 
-              <tr>
-                <td>EcoSource Pvt Ltd</td>
-                <td>88</td>
-                <td><span className="low">Low</span></td>
-                <td>✓ Verified</td>
-              </tr>
+          <EvidenceRow
+            claim="Employee Safety Standard"
+            evidence="ISO 45001 Certificate"
+            confidence="94%"
+            status="Verified"
+          />
 
-              <tr>
-                <td>Global Materials</td>
-                <td>61</td>
-                <td><span className="medium">Medium</span></td>
-                <td>⚠ Review</td>
-              </tr>
+          <EvidenceRow
+            claim="Environmental Management"
+            evidence="ISO 14001 Certificate"
+            confidence="97%"
+            status="Verified"
+          />
 
-              <tr>
-                <td>Future Manufacturing</td>
-                <td>42</td>
-                <td><span className="high">High</span></td>
-                <td>⚠ Flagged</td>
-              </tr>
-            </tbody>
-          </table>
+          <EvidenceRow
+            claim="Carbon Reduction Target"
+            evidence="Sustainability Report 2026"
+            confidence="82%"
+            status="Review"
+          />
 
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section className="about" id="about">
+      {/* HISTORY */}
+      <section className="history-section" id="history">
+        <div className="history-card">
 
-        <div>
-          <span>ABOUT HEISENBERG</span>
+          <div>
+            <p className="eyebrow">AUDIT HISTORY</p>
+            <h2>Permanent audit record</h2>
+            <p>
+              Every evaluation is recorded with evidence, score,
+              verification status and timestamp.
+            </p>
+          </div>
 
-          <h2>
-            Smarter ESG decisions.
-            <br />
-            Safer procurement.
-          </h2>
+          <div className="history-number">
+            <strong>128</strong>
+            <span>Audits Recorded</span>
+          </div>
+
         </div>
-
-        <p>
-          HEISENBERG is an AI-powered ESG procurement auditing platform
-          designed to automate vendor document verification, identify
-          suspicious sustainability certificates and provide actionable
-          compliance insights.
-        </p>
-
       </section>
 
       {/* FOOTER */}
       <footer>
-        <h3>HEISENBERG ESG AUDITOR</h3>
+        <div>
+          <strong>HEISENBERG</strong>
+          <span> Corporate Sustainable Procurement Auditor</span>
+        </div>
+
         <p>
-          Smart • Sustainable • Secure Procurement
+          AI-powered ESG compliance verification and procurement intelligence.
         </p>
-        <small>© 2026 HEISENBERG</small>
       </footer>
 
+    </div>
+  );
+}
+
+
+/* COMPONENTS */
+
+function ProcessCard({ number, title, text }) {
+  return (
+    <div className="process-card">
+      <span>{number}</span>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </div>
+  );
+}
+
+function PipelineStep({ number, title, active }) {
+  return (
+    <div className={`pipeline-step ${active ? "active" : ""}`}>
+      <span>{number}</span>
+      <p>{title}</p>
+      <b>{active ? "✓" : "○"}</b>
+    </div>
+  );
+}
+
+function ScoreCard({ title, score, icon }) {
+  return (
+    <div className="result-card">
+      <div className="score-icon">{icon}</div>
+      <span className="result-label">{title}</span>
+      <strong className="result-score">{score}</strong>
+      <div className="progress">
+        <div style={{ width: `${score}%` }}></div>
+      </div>
+      <p>Verified ESG performance</p>
+    </div>
+  );
+}
+
+function EvidenceRow({ claim, evidence, confidence, status }) {
+  return (
+    <div className="table-row">
+      <span>{claim}</span>
+      <span>{evidence}</span>
+      <span>{confidence}</span>
+      <span className={status === "Verified" ? "verified" : "review"}>
+        {status}
+      </span>
     </div>
   );
 }
